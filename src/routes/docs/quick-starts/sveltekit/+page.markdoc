@@ -85,8 +85,12 @@ Replace the contents of `src/routes/+page.svelte` with the following code.
     }
 
     async function register(email, password) {
-        await account.create(ID.unique(), email, password);
-        login(email, password);
+        try {
+            await account.create(ID.unique(), email, password);
+			login(email, password);
+		} catch (error) {
+			console.error(`Error creating user: ${error.message}`);
+		}
     }
 
     function submit(e) {
@@ -108,7 +112,7 @@ Replace the contents of `src/routes/+page.svelte` with the following code.
 </script>
 
 <p>
-    {loggedInUser ? `Logged in as ${loggedInUser.name}` : 'Not logged in'}
+    {loggedInUser ? `Logged in as ${loggedInUser.email}` : 'Not logged in'}
 </p>
 
 <form on:submit={submit}>
