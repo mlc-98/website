@@ -85,8 +85,13 @@ Replace the contents of `src/routes/+page.svelte` with the following code.
     }
 
     async function register(email, password) {
-        await account.create(ID.unique(), email, password);
-        login(email, password);
+        try {
+			const user = await db.account.create(ID.unique(), email, password);
+			login(email, password);
+		} catch (error: unknown) {
+			const appwriteError = error as AppwriteException;
+			console.error(`Error creating user: ${appwriteError.message}`);
+		}
     }
 
     function submit(e) {
